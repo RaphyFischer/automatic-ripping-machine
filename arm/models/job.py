@@ -84,6 +84,12 @@ class Job(db.Model):
             lsdvdlbl = str(subprocess.check_output(command, shell=True).strip(), 'utf-8')
             self.label = lsdvdlbl
 
+        if self.disctype == "bluray" and not self.label:
+            logging.info("No disk label Available. Trying blkid")
+            command = f"blkid -o value -s LABEL {devpath}"
+            blkidlabel = str(subprocess.check_output(command, shell=True).strip(), 'utf-8')
+            self.label = blkidlabel
+
     def __str__(self):
         """Returns a string of the object"""
 
